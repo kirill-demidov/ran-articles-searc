@@ -1,0 +1,111 @@
+{
+  "articles": [
+    {
+      "id": "2075-8251_19395_293590",
+      "journal": {
+        "id": "2075-8251",
+        "title": "Acta Naturae",
+        "url": "https://journals.rcsi.science/2075-8251"
+      },
+      "issue": {
+        "id": "19395",
+        "title": "Vol 17, No 1",
+        "year": 2025,
+        "url": "https://journals.rcsi.science/2075-8251/issue/view/19395"
+      },
+      "article": {
+        "id": "293590",
+        "title": "Pro-inflammatory cytokines, ferroptosis, and cancer",
+        "authors": ["A. A. Vartanian", "V. S. Kosorukov"],
+        "abstract": "Ferroptosis is a form of regulated cell death that differs from apoptosis, necroptosis, and autophagy. The process of ferroptosis is characterized by the iron-dependent accumulation of lipid peroxides. Pro-inflammatory cytokines play a crucial role in cancer development and progression through various mechanisms including the regulation of cell death pathways.",
+        "keywords": ["ferroptosis", "cancer", "cytokines", "cell death", "inflammation"],
+        "doi": "10.32607/actanaturae.27547",
+        "pages": "4-10"
+      },
+      "files": {
+        "pdf_ru": "gs://journals-ran/journals/2075-8251/19395/293590/article_ru.pdf",
+        "pdf_en": "gs://journals-ran/journals/2075-8251/19395/293590/article_en.pdf",
+        "xml": "gs://journals-ran/journals/2075-8251/19395/293590/article.xml"
+      },
+      "download_urls": {
+        "pdf_ru": "https://journals.rcsi.science/2075-8251/article/download/293590/270400",
+        "pdf_en": "https://journals.rcsi.science/2075-8251/article/download/293590/270401"
+      },
+      "indexed_date": "2025-09-06T12:00:00Z"
+    },
+    {
+      "id": "2075-8251_18645_284115",
+      "journal": {
+        "id": "2075-8251",
+        "title": "Acta Naturae",
+        "url": "https://journals.rcsi.science/2075-8251"
+      },
+      "issue": {
+        "id": "18645", 
+        "title": "Vol 16, No 4",
+        "year": 2024,
+        "url": "https://journals.rcsi.science/2075-8251/issue/view/18645"
+      },
+      "article": {
+        "id": "284115",
+        "title": "Molecular mechanisms of drug resistance in cancer therapy",
+        "authors": ["E. I. Petrov", "N. V. Smirnova", "M. A. Kozlov"],
+        "abstract": "Drug resistance remains a major challenge in cancer treatment. This review examines the molecular mechanisms underlying resistance to various therapeutic agents, including mutations in drug targets, efflux pump overexpression, and metabolic reprogramming. Understanding these mechanisms is crucial for developing new therapeutic strategies.",
+        "keywords": ["drug resistance", "cancer therapy", "molecular mechanisms", "chemotherapy", "targeted therapy"],
+        "doi": "10.32607/actanaturae.28156",
+        "pages": "15-28"
+      },
+      "files": {
+        "pdf_ru": "gs://journals-ran/journals/2075-8251/18645/284115/article_ru.pdf",
+        "pdf_en": "gs://journals-ran/journals/2075-8251/18645/284115/article_en.pdf",
+        "xml": "gs://journals-ran/journals/2075-8251/18645/284115/article.xml"
+      },
+      "download_urls": {
+        "pdf_ru": "https://journals.rcsi.science/2075-8251/article/download/284115/261897",
+        "pdf_en": "https://journals.rcsi.science/2075-8251/article/download/284115/261898"
+      },
+      "indexed_date": "2025-09-06T12:00:00Z"
+    },
+    {
+      "id": "1234-5678_15420_198765",
+      "journal": {
+        "id": "1234-5678",
+        "title": "Российский журнал биомеханики",
+        "url": "https://journals.rcsi.science/1234-5678"
+      },
+      "issue": {
+        "id": "15420",
+        "title": "Том 28, № 2",
+        "year": 2024,
+        "url": "https://journals.rcsi.science/1234-5678/issue/view/15420"
+      },
+      "article": {
+        "id": "198765",
+        "title": "Биомеханические аспекты регенерации костной ткани",
+        "authors": ["И. В. Иванов", "С. П. Федоров", "А. Н. Морозов"],
+        "abstract": "В статье рассматриваются современные подходы к изучению биомеханических свойств костной ткани в процессе регенерации. Представлены результаты экспериментальных исследований механических характеристик различных типов костных дефектов и методов их восстановления.",
+        "keywords": ["биомеханика", "регенерация", "костная ткань", "механические свойства", "остеогенез"],
+        "doi": "10.15372/biomech.2024.198765",
+        "pages": "45-62"
+      },
+      "files": {
+        "pdf_ru": "gs://journals-ran/journals/1234-5678/15420/198765/article_ru.pdf",
+        "pdf_en": "gs://journals-ran/journals/1234-5678/15420/198765/article_en.pdf",
+        "xml": "gs://journals-ran/journals/1234-5678/15420/198765/article.xml"
+      },
+      "download_urls": {
+        "pdf_ru": "https://journals.rcsi.science/1234-5678/article/download/198765/150420",
+        "pdf_en": null
+      },
+      "indexed_date": "2025-09-06T12:00:00Z"
+    }
+  ],
+  "stats": {
+    "total_articles": 3,
+    "total_journals": 2,
+    "total_authors": 8,
+    "total_keywords": 15,
+    "year_range": [2024, 2025],
+    "last_updated": "2025-09-06T12:00:00Z"
+  }
+}

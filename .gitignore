@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Google Cloud
+service-account-key.json
+*.json.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+_site/
+dist/
+build/
+
+# Node modules (if any)
+node_modules/
+
+# Temporary files
+tmp/
+temp/
+.tmp

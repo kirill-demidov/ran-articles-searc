@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск статей РАН - Библиотека научных публикаций</title>
+    <meta name="description" content="Поиск по научным статьям Российской академии наук. Более 15,000 статей из 100+ журналов">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="icon" href="assets/favicon.ico">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                🔬 <span>Библиотека РАН</span>
+            </h1>
+            <p class="subtitle">
+                Поиск по <span id="total-count" class="highlight">...</span> статьям 
+                из <span id="journal-count" class="highlight">...</span> журналов
+            </p>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <!-- Поисковая панель -->
+            <section class="search-section">
+                <div class="search-box">
+                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            id="search-query" 
+                            class="search-input"
+                            placeholder="Поиск по названию, авторам, ключевым словам, DOI..."
+                            autocomplete="off"
+                        >
+                        <button id="search-btn" class="search-button">
+                            🔍 Искать
+                        </button>
+                    </div>
+                    
+                    <!-- Автодополнение -->
+                    <div id="autocomplete" class="autocomplete hidden">
+                        <!-- Предложения автодополнения -->
+                    </div>
+                </div>
+                
+                <!-- Фильтры -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="journal-filter">Журнал:</label>
+                        <select id="journal-filter" class="filter-select">
+                            <option value="">Все журналы</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="year-filter">Год:</label>
+                        <select id="year-filter" class="filter-select">
+                            <option value="">Все годы</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="author-filter">Автор:</label>
+                        <input type="text" id="author-filter" class="filter-input" placeholder="Фамилия автора">
+                    </div>
+                    
+                    <button id="clear-filters" class="clear-button">
+                        ✕ Очистить
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Результаты поиска -->
+            <section class="results-section">
+                <div class="results-header">
+                    <div class="results-info">
+                        <span id="results-count">0</span> результатов найдено
+                        <span id="search-time" class="search-time"></span>
+                    </div>
+                    
+                    <div class="results-controls">
+                        <label for="sort-select">Сортировка:</label>
+                        <select id="sort-select" class="sort-select">
+                            <option value="relevance">По relevantности</option>
+                            <option value="date">По дате</option>
+                            <option value="title">По названию</option>
+                            <option value="journal">По журналу</option>
+                        </select>
+                        
+                        <button id="export-btn" class="export-button">
+                            📄 Экспорт
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="results" class="results-container">
+                    <!-- Приветственное сообщение -->
+                    <div id="welcome-message" class="welcome-message">
+                        <h2>🎯 Добро пожаловать в библиотеку РАН!</h2>
+                        <p>Введите поисковый запрос выше, чтобы найти научные статьи:</p>
+                        <ul class="search-tips">
+                            <li><strong>Поиск по названию:</strong> "машинное обучение"</li>
+                            <li><strong>Поиск по автору:</strong> "Иванов"</li>
+                            <li><strong>Поиск по DOI:</strong> "10.32607/actanaturae"</li>
+                            <li><strong>Поиск по ключевым словам:</strong> "нейронные сети"</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Результаты появятся здесь -->
+                </div>
+                
+                <!-- Пагинация -->
+                <div id="pagination" class="pagination hidden">
+                    <!-- Кнопки пагинации -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Загрузочный индикатор -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Загружаем данные...</p>
+    </div>
+    
+    <!-- Модальное окно для экспорта -->
+    <div id="export-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Экспорт результатов</h3>
+                <button class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Выберите формат экспорта:</p>
+                <div class="export-options">
+                    <button id="export-csv" class="export-option">📊 CSV</button>
+                    <button id="export-bibtex" class="export-option">📚 BibTeX</button>
+                    <button id="export-json" class="export-option">📋 JSON</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Библиотека РАН. Данные обновляются ежедневно.</p>
+            <p>Создано на основе открытых данных <a href="https://journals.rcsi.science/" target="_blank">journals.rcsi.science</a></p>
+        </div>
+    </footer>
+    
+    <!-- Скрипты -->
+    <script src="assets/js/lunr.min.js"></script>
+    <script src="assets/js/search.js"></script>
+    
+    <!-- Инициализация -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const search = new RANArticleSearch();
+            
+            // Показываем загрузку
+            document.getElementById('loading').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
