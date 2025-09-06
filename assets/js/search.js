@@ -49,13 +49,36 @@ class RANArticleSearch {
     }
     
     async loadArticles() {
-        // Пока используем тестовые данные - потом заменим на реальные
-        return this.generateTestData();
+        try {
+            const response = await fetch('data/articles.json');
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.warn('Файл articles.json не найден, используем тестовые данные');
+                return this.generateTestData();
+            }
+        } catch (error) {
+            console.warn('Ошибка загрузки articles.json:', error);
+            return this.generateTestData();
+        }
     }
     
     async loadSearchIndex() {
-        // Генерируем тестовый индекс - потом заменим на реальный
-        return this.buildTestSearchIndex();
+        try {
+            const response = await fetch('data/search-index.json');
+            if (response.ok) {
+                const indexData = await response.json();
+                if (indexData && indexData.documents) {
+                    // Строим индекс из документов на клиенте
+                    return this.buildSearchIndexFromDocuments(indexData.documents);
+                }
+            }
+            console.warn('Некорректный формат search-index.json, используем тестовый индекс');
+            return this.buildTestSearchIndex();
+        } catch (error) {
+            console.warn('Ошибка загрузки search-index.json:', error);
+            return this.buildTestSearchIndex();
+        }
     }
     
     generateTestData() {
@@ -133,6 +156,24 @@ class RANArticleSearch {
             doi: article.article.doi
         }));
         
+        const idx = lunr(function() {
+            this.ref('id');
+            this.field('title', { boost: 10 });
+            this.field('authors', { boost: 5 });
+            this.field('keywords', { boost: 8 });
+            this.field('abstract', { boost: 2 });
+            this.field('journal', { boost: 3 });
+            this.field('doi', { boost: 15 });
+            
+            documents.forEach((doc) => {
+                this.add(doc);
+            });
+        });
+        
+        return idx.serialize();
+    }
+    
+    buildSearchIndexFromDocuments(documents) {
         const idx = lunr(function() {
             this.ref('id');
             this.field('title', { boost: 10 });
