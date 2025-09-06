@@ -157,10 +157,32 @@
     <!-- Инициализация -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const search = new RANArticleSearch();
-            
-            // Показываем загрузку
-            document.getElementById('loading').classList.remove('hidden');
+            try {
+                console.log('🚀 DOM загружен, инициализируем поиск...');
+                
+                // Показываем загрузку
+                document.getElementById('loading').classList.remove('hidden');
+                console.log('📱 Загрузочный индикатор показан');
+                
+                // Инициализируем поиск
+                const search = new RANArticleSearch();
+                console.log('✅ Класс RANArticleSearch инициализирован');
+                
+            } catch (error) {
+                console.error('❌ Ошибка инициализации:', error);
+                
+                // Показываем ошибку пользователю
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.innerHTML = `
+                        <div style="text-align: center; color: #e74c3c;">
+                            <h3>❌ Ошибка загрузки</h3>
+                            <p>${error.message}</p>
+                            <p>Попробуйте перезагрузить страницу</p>
+                        </div>
+                    `;
+                }
+            }
         });
     </script>
 </body>
