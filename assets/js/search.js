@@ -50,33 +50,47 @@ class RANArticleSearch {
     
     async loadArticles() {
         try {
-            const response = await fetch('data/articles.json');
+            console.log('📥 Загружаем articles.json...');
+            const response = await fetch(`data/articles.json?v=${Date.now()}`);
+            console.log('📡 Ответ сервера:', response.status, response.statusText);
+            
             if (response.ok) {
-                return await response.json();
+                const data = await response.json();
+                console.log('📊 Загружено статей:', data.articles?.length || 0);
+                return data;
             } else {
-                console.warn('Файл articles.json не найден, используем тестовые данные');
+                console.warn('❌ Файл articles.json не найден, используем тестовые данные');
                 return this.generateTestData();
             }
         } catch (error) {
-            console.warn('Ошибка загрузки articles.json:', error);
+            console.error('❌ Ошибка загрузки articles.json:', error);
             return this.generateTestData();
         }
     }
     
     async loadSearchIndex() {
         try {
-            const response = await fetch('data/search-index.json');
+            console.log('📥 Загружаем search-index.json...');
+            const response = await fetch(`data/search-index.json?v=${Date.now()}`);
+            console.log('📡 Ответ сервера для индекса:', response.status, response.statusText);
+            
             if (response.ok) {
                 const indexData = await response.json();
-                if (indexData && indexData.documents) {
-                    // Строим индекс из документов на клиенте
-                    return this.buildSearchIndexFromDocuments(indexData.documents);
+                console.log('📊 Загружен индекс версии:', indexData.version);
+                
+                // Проверяем, что это правильный формат Lunr индекса
+                if (indexData && indexData.version && indexData.fields) {
+                    return indexData; // Возвращаем готовый индекс для lunr.Index.load()
+                } else {
+                    console.warn('❌ Некорректный формат search-index.json, используем тестовый индекс');
+                    return this.buildTestSearchIndex();
                 }
+            } else {
+                console.warn('❌ Файл search-index.json не найден, используем тестовый индекс');
+                return this.buildTestSearchIndex();
             }
-            console.warn('Некорректный формат search-index.json, используем тестовый индекс');
-            return this.buildTestSearchIndex();
         } catch (error) {
-            console.warn('Ошибка загрузки search-index.json:', error);
+            console.error('❌ Ошибка загрузки search-index.json:', error);
             return this.buildTestSearchIndex();
         }
     }
