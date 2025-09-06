@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - RAN Articles Search</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-left: 4px solid #007bff; }
+        .error { border-left-color: #dc3545; }
+        .success { border-left-color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>RAN Articles Search - Test Page</h1>
+    <div id="results"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, type = 'log') {
+            console.log(message);
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        async function testEverything() {
+            log('🚀 Начинаем тестирование...', 'log');
+            
+            try {
+                // Тест 1: Загрузка articles.json
+                log('📥 Тест 1: Загрузка articles.json...', 'log');
+                const articlesResponse = await fetch(`data/articles.json?t=${Date.now()}`);
+                log(`📡 Статус ответа: ${articlesResponse.status} ${articlesResponse.statusText}`, 'log');
+                
+                if (!articlesResponse.ok) {
+                    throw new Error(`HTTP ${articlesResponse.status}`);
+                }
+                
+                const articlesData = await articlesResponse.json();
+                log(`✅ Успешно загружено! Статей: ${articlesData.articles?.length || 0}`, 'success');
+                log(`📊 Статистика: ${JSON.stringify(articlesData.stats, null, 2)}`, 'log');
+                
+                if (articlesData.articles && articlesData.articles.length > 0) {
+                    log(`🔍 Первая статья: ${articlesData.articles[0].article?.title || 'No title'}`, 'log');
+                }
+                
+                // Тест 2: Загрузка search-index.json
+                log('📥 Тест 2: Загрузка search-index.json...', 'log');
+                const indexResponse = await fetch(`data/search-index.json?t=${Date.now()}`);
+                log(`📡 Статус ответа: ${indexResponse.status} ${indexResponse.statusText}`, 'log');
+                
+                if (!indexResponse.ok) {
+                    throw new Error(`HTTP ${indexResponse.status}`);
+                }
+                
+                const indexData = await indexResponse.json();
+                log(`✅ Индекс загружен! Версия: ${indexData.version}, документов: ${indexData.documents?.length || 0}`, 'success');
+                
+                // Тест 3: Создание Lunr.js индекса
+                if (indexData.documents && indexData.documents.length > 0) {
+                    log('🔧 Тест 3: Создание Lunr.js индекса...', 'log');
+                    
+                    const idx = lunr(function() {
+                        this.ref('id');
+                        this.field('title', { boost: 10 });
+                        this.field('authors', { boost: 5 });
+                        this.field('keywords', { boost: 8 });
+                        this.field('abstract', { boost: 2 });
+                        this.field('journal', { boost: 3 });
+                        this.field('doi', { boost: 15 });
+                        
+                        indexData.documents.forEach((doc) => {
+                            this.add(doc);
+                        });
+                    });
+                    
+                    log('✅ Lunr.js индекс успешно создан!', 'success');
+                    
+                    // Тест 4: Тестовый поиск
+                    log('🔍 Тест 4: Тестовый поиск по слову "cancer"...', 'log');
+                    const searchResults = idx.search('cancer');
+                    log(`🎯 Найдено результатов: ${searchResults.length}`, searchResults.length > 0 ? 'success' : 'log');
+                    
+                    if (searchResults.length > 0) {
+                        searchResults.slice(0, 3).forEach((result, i) => {
+                            const doc = indexData.documents[parseInt(result.ref)];
+                            log(`   ${i+1}. ${doc.title} (score: ${result.score.toFixed(3)})`, 'log');
+                        });
+                    }
+                    
+                    log('🎉 Все тесты пройдены успешно!', 'success');
+                    
+                } else {
+                    log('❌ Нет документов в индексе', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`, 'error');
+                log(`📍 Stack trace: ${error.stack}`, 'error');
+            }
+        }
+        
+        // Запускаем тесты
+        testEverything();
+    </script>
+</body>
+</html>
