@@ -86,15 +86,15 @@ class RANIndexBuilder:
             Обработанные данные статьи
         """
         try:
-            # Извлекаем путь: journals/2075-8251/19395/293590/metadata.json
+            # Извлекаем путь: journals/2075-8251/14484/233301/211364/metadata.json
             path_parts = blob_path.split('/')
-            if len(path_parts) < 5:
+            if len(path_parts) < 6:
                 logger.warning(f"Неправильная структура пути: {blob_path}")
                 return None
             
             journal_id = path_parts[1]
             issue_id = path_parts[2] 
-            article_id = path_parts[3]
+            article_id = path_parts[3] + "_" + path_parts[4]  # Объединяем два ID
             
             # Извлекаем данные
             journal_info = metadata.get("journal", {})
