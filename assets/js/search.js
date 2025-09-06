@@ -25,7 +25,15 @@ class RANArticleSearch {
             ]);
             
             this.articles = articlesData.articles || [];
-            this.searchIndex = lunr.Index.load(searchIndexData);
+            
+            // Обрабатываем индекс в зависимости от того, что вернула loadSearchIndex
+            if (typeof searchIndexData === 'object' && searchIndexData.serialize) {
+                // Это уже построенный индекс Lunr.js
+                this.searchIndex = searchIndexData;
+            } else {
+                // Это сериализованный индекс, загружаем его
+                this.searchIndex = lunr.Index.load(searchIndexData);
+            }
             
             console.log(`📚 Загружено ${this.articles.length} статей`);
             
@@ -78,9 +86,16 @@ class RANArticleSearch {
                 const indexData = await response.json();
                 console.log('📊 Загружен индекс версии:', indexData.version);
                 
-                // Проверяем, что это правильный формат Lunr индекса
+                // Проверяем формат индекса
                 if (indexData && indexData.version && indexData.fields) {
-                    return indexData; // Возвращаем готовый индекс для lunr.Index.load()
+                    if (indexData.documents) {
+                        // Это конфигурация с документами - строим индекс на клиенте
+                        console.log('🔧 Строим Lunr.js индекс из', indexData.documents.length, 'документов');
+                        return this.buildSearchIndexFromDocuments(indexData.documents);
+                    } else {
+                        // Это готовый индекс Lunr.js
+                        return indexData;
+                    }
                 } else {
                     console.warn('❌ Некорректный формат search-index.json, используем тестовый индекс');
                     return this.buildTestSearchIndex();
@@ -184,7 +199,7 @@ class RANArticleSearch {
             });
         });
         
-        return idx.serialize();
+        return idx; // Возвращаем построенный индекс
     }
     
     buildSearchIndexFromDocuments(documents) {
@@ -202,7 +217,7 @@ class RANArticleSearch {
             });
         });
         
-        return idx.serialize();
+        return idx; // Возвращаем построенный индекс, а не его сериализацию
     }
     
     updateStats(stats) {
