@@ -123,15 +123,19 @@ jobs:
         run: |
           echo "🚀 Deployment completed!"
           echo "📊 Site statistics:"
-          [ -f data/articles.json ] && python -c "
-          import json
-          with open('data/articles.json') as f:
-              data = json.load(f)
-              stats = data.get('stats', {})
-              print(f'   📚 Articles: {stats.get(\"total_articles\", \"unknown\")}')
-              print(f'   🏛️ Journals: {stats.get(\"total_journals\", \"unknown\")}')
-              print(f'   📅 Last updated: {stats.get(\"last_updated\", \"unknown\")}')
-          " || echo "Could not read statistics"
+          if [ -f data/articles.json ]; then
+            python3 -c "
+import json
+with open('data/articles.json') as f:
+    data = json.load(f)
+    stats = data.get('stats', {})
+    print('   📚 Articles: {}'.format(stats.get('total_articles', 'unknown')))
+    print('   🏛️ Journals: {}'.format(stats.get('total_journals', 'unknown')))
+    print('   📅 Last updated: {}'.format(stats.get('last_updated', 'unknown')))
+            "
+          else
+            echo "Could not read statistics"
+          fi
           
       - name: Create deployment summary
         run: |
@@ -142,14 +146,14 @@ jobs:
           echo "📊 **Statistics:**" >> $GITHUB_STEP_SUMMARY
           
           if [ -f data/articles.json ]; then
-            python -c "
-            import json, os
-            with open('data/articles.json') as f:
-                data = json.load(f)
-                stats = data.get('stats', {})
-                print(f'- 📚 Articles indexed: **{stats.get(\"total_articles\", \"unknown\")}**')
-                print(f'- 🏛️ Journals: **{stats.get(\"total_journals\", \"unknown\")}**') 
-                print(f'- 📅 Last updated: **{stats.get(\"last_updated\", \"unknown\")}**')
+            python3 -c "
+import json
+with open('data/articles.json') as f:
+    data = json.load(f)
+    stats = data.get('stats', {})
+    print('- 📚 Articles indexed: **{}**'.format(stats.get('total_articles', 'unknown')))
+    print('- 🏛️ Journals: **{}**'.format(stats.get('total_journals', 'unknown')))
+    print('- 📅 Last updated: **{}**'.format(stats.get('last_updated', 'unknown')))
             " >> $GITHUB_STEP_SUMMARY
           else
             echo "- ⚠️ Could not read statistics" >> $GITHUB_STEP_SUMMARY
