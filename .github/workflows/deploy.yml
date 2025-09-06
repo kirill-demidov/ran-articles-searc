@@ -124,15 +124,15 @@ jobs:
           echo "🚀 Deployment completed!"
           echo "📊 Site statistics:"
           if [ -f data/articles.json ]; then
-            python3 -c "
+            python3 -c '
 import json
-with open('data/articles.json') as f:
+with open("data/articles.json") as f:
     data = json.load(f)
-    stats = data.get('stats', {})
-    print('   📚 Articles: {}'.format(stats.get('total_articles', 'unknown')))
-    print('   🏛️ Journals: {}'.format(stats.get('total_journals', 'unknown')))
-    print('   📅 Last updated: {}'.format(stats.get('last_updated', 'unknown')))
-            "
+    stats = data.get("stats", {})
+    print("   📚 Articles: {}".format(stats.get("total_articles", "unknown")))
+    print("   🏛️ Journals: {}".format(stats.get("total_journals", "unknown")))
+    print("   📅 Last updated: {}".format(stats.get("last_updated", "unknown")))
+            '
           else
             echo "Could not read statistics"
           fi
@@ -146,15 +146,15 @@ with open('data/articles.json') as f:
           echo "📊 **Statistics:**" >> $GITHUB_STEP_SUMMARY
           
           if [ -f data/articles.json ]; then
-            python3 -c "
+            python3 -c '
 import json
-with open('data/articles.json') as f:
+with open("data/articles.json") as f:
     data = json.load(f)
-    stats = data.get('stats', {})
-    print('- 📚 Articles indexed: **{}**'.format(stats.get('total_articles', 'unknown')))
-    print('- 🏛️ Journals: **{}**'.format(stats.get('total_journals', 'unknown')))
-    print('- 📅 Last updated: **{}**'.format(stats.get('last_updated', 'unknown')))
-            " >> $GITHUB_STEP_SUMMARY
+    stats = data.get("stats", {})
+    print("- 📚 Articles indexed: **{}**".format(stats.get("total_articles", "unknown")))
+    print("- 🏛️ Journals: **{}**".format(stats.get("total_journals", "unknown")))
+    print("- 📅 Last updated: **{}**".format(stats.get("last_updated", "unknown")))
+            ' >> $GITHUB_STEP_SUMMARY
           else
             echo "- ⚠️ Could not read statistics" >> $GITHUB_STEP_SUMMARY
           fi
