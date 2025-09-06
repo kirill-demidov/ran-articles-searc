@@ -56,6 +56,11 @@ jobs:
           pip install --upgrade pip
           pip install google-cloud-storage
           
+      - name: Install jq for JSON parsing
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          
       - name: Setup Node.js (for Lunr.js)
         uses: actions/setup-node@v4
         with:
@@ -124,17 +129,11 @@ jobs:
           echo "🚀 Deployment completed!"
           echo "📊 Site statistics:"
           if [ -f data/articles.json ]; then
-            python3 -c '
-import json
-with open("data/articles.json") as f:
-    data = json.load(f)
-    stats = data.get("stats", {})
-    print("   📚 Articles: {}".format(stats.get("total_articles", "unknown")))
-    print("   🏛️ Journals: {}".format(stats.get("total_journals", "unknown")))
-    print("   📅 Last updated: {}".format(stats.get("last_updated", "unknown")))
-            '
+            echo "   📚 Articles: $(cat data/articles.json | jq -r '.stats.total_articles // "unknown"')"
+            echo "   🏛️ Journals: $(cat data/articles.json | jq -r '.stats.total_journals // "unknown"')"
+            echo "   📅 Last updated: $(cat data/articles.json | jq -r '.stats.last_updated // "unknown"')"
           else
-            echo "Could not read statistics"
+            echo "   ⚠️ Could not read statistics"
           fi
           
       - name: Create deployment summary
@@ -146,15 +145,12 @@ with open("data/articles.json") as f:
           echo "📊 **Statistics:**" >> $GITHUB_STEP_SUMMARY
           
           if [ -f data/articles.json ]; then
-            python3 -c '
-import json
-with open("data/articles.json") as f:
-    data = json.load(f)
-    stats = data.get("stats", {})
-    print("- 📚 Articles indexed: **{}**".format(stats.get("total_articles", "unknown")))
-    print("- 🏛️ Journals: **{}**".format(stats.get("total_journals", "unknown")))
-    print("- 📅 Last updated: **{}**".format(stats.get("last_updated", "unknown")))
-            ' >> $GITHUB_STEP_SUMMARY
+            ARTICLES=$(cat data/articles.json | jq -r '.stats.total_articles // "unknown"')
+            JOURNALS=$(cat data/articles.json | jq -r '.stats.total_journals // "unknown"')
+            UPDATED=$(cat data/articles.json | jq -r '.stats.last_updated // "unknown"')
+            echo "- 📚 Articles indexed: **${ARTICLES}**" >> $GITHUB_STEP_SUMMARY
+            echo "- 🏛️ Journals: **${JOURNALS}**" >> $GITHUB_STEP_SUMMARY
+            echo "- 📅 Last updated: **${UPDATED}**" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ⚠️ Could not read statistics" >> $GITHUB_STEP_SUMMARY
           fi
