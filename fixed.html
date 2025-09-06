@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAN Articles Search - Fixed Version</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-item {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #ffffff;
+        }
+        .result-item h3 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+        }
+        .result-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .result-item a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .result-item a:hover {
+            background: #5a67d8;
+        }
+        #results {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Библиотека РАН</h1>
+        <p class="subtitle">Поиск научных статей</p>
+        
+        <div class="stats">
+            <strong>📚 Статей:</strong> <span id="total-count">0</span> | 
+            <strong>🏛️ Журналов:</strong> <span id="journal-count">0</span>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Загружаем данные...</p>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script>
+    <script src="fixed-search.js"></script>
+</body>
+</html>
