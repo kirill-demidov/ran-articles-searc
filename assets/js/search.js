@@ -25,15 +25,7 @@ class RANArticleSearch {
             ]);
             
             this.articles = articlesData.articles || [];
-            
-            // Обрабатываем индекс в зависимости от того, что вернула loadSearchIndex
-            if (typeof searchIndexData === 'object' && searchIndexData.serialize) {
-                // Это уже построенный индекс Lunr.js
-                this.searchIndex = searchIndexData;
-            } else {
-                // Это сериализованный индекс, загружаем его
-                this.searchIndex = lunr.Index.load(searchIndexData);
-            }
+            this.searchIndex = searchIndexData; // Всегда получаем готовый индекс
             
             console.log(`📚 Загружено ${this.articles.length} статей`);
             
@@ -87,15 +79,10 @@ class RANArticleSearch {
                 console.log('📊 Загружен индекс версии:', indexData.version);
                 
                 // Проверяем формат индекса
-                if (indexData && indexData.version && indexData.fields) {
-                    if (indexData.documents) {
-                        // Это конфигурация с документами - строим индекс на клиенте
-                        console.log('🔧 Строим Lunr.js индекс из', indexData.documents.length, 'документов');
-                        return this.buildSearchIndexFromDocuments(indexData.documents);
-                    } else {
-                        // Это готовый индекс Lunr.js
-                        return indexData;
-                    }
+                if (indexData && indexData.documents && indexData.documents.length > 0) {
+                    // Это конфигурация с документами - строим индекс на клиенте
+                    console.log('🔧 Строим Lunr.js индекс из', indexData.documents.length, 'документов');
+                    return this.buildSearchIndexFromDocuments(indexData.documents);
                 } else {
                     console.warn('❌ Некорректный формат search-index.json, используем тестовый индекс');
                     return this.buildTestSearchIndex();
